@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brown Delivery — Fast Food Delivery in Ethiopia</title>
+  <meta name="description" content="Brown Delivery – Nyaata gaarii fi saffisaa gara mana keessaniitti geessina. Afaan Oromoo fi Amharic tajaajila. Order via Telebirr, Ebirr, M‑Pesa, CBE, CBO." />
+  <meta name="keywords" content="Brown Delivery, food delivery, Addis Ababa, Asella, Telebirr, Ebirr, M-Pesa" />
+  <meta property="og:title" content="Brown Delivery" />
+  <meta property="og:description" content="Fast, affordable food delivery — Oromo & Amharic." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=Brown+Delivery" />
+  <meta name="theme-color" content="#8b4513" />
+  <style>
+    :root{
+      --brand:#8b4513; /* SaddleBrown */
+      --ink:#222;
+      --bg:#f7f7f7;
+      --card:#ffffff;
+      --muted:#666;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+    a{color:inherit}
+    header{background:var(--brand);color:#fff;padding:28px 16px;text-align:center}
+    header h1{margin:0 0 6px 0;font-size:28px;letter-spacing:.5px}
+    header p{margin:0;color:#fff;opacity:.95}
+    .container{max-width:1000px;margin:0 auto;padding:16px}
+    .lang-switch{display:flex;gap:8px;justify-content:center;margin-top:12px}
+    .lang-switch button{background:#fff;color:var(--brand);border:none;padding:8px 12px;border-radius:999px;cursor:pointer;font-weight:700}
+    .lang-switch button.active{background:#ffe7d6}
+    nav{position:sticky;top:0;z-index:20;background:#333}
+    nav .navwrap{max-width:1000px;margin:0 auto;display:flex;gap:10px;align-items:center;padding:8px 12px}
+    nav a{color:#fff;text-decoration:none;padding:10px 12px;border-radius:10px;font-weight:600}
+    nav a:hover{background:#444}
+    .cart-chip{margin-left:auto;background:#fff;color:var(--brand);border:none;padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:700}
+    section{padding:20px 0}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 6px 18px rgba(0,0,0,.06);padding:18px}
+    .grid{display:grid;gap:14px}
+    @media(min-width:720px){.grid.cols-2{grid-template-columns:1fr 1fr}.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
+    .title{margin:0 0 10px 0;font-size:22px}
+    .muted{color:var(--muted)}
+    /* menu */
+    .menu-section h3{margin:6px 0 10px 0}
+    .item{display:flex;gap:12px;align-items:center;justify-content:space-between;background:#fff;border:1px solid #eee;border-radius:12px;padding:12px}
+    .item .left{display:flex;gap:10px;align-items:center}
+    .emoji{font-size:22px}
+    .price{font-weight:800}
+    .qty{display:flex;gap:6px;align-items:center}
+    .btn{border:none;background:var(--brand);color:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
+    .btn.ghost{background:#fff;color:var(--brand);border:1px solid #e6e6e6}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+    .toolbar input{flex:1;min-width:180px;padding:10px 12px;border:1px solid #ddd;border-radius:10px}
+    footer{background:#333;color:#fff;text-align:center;padding:16px;margin-top:24px}
+    .badges{display:flex;flex-wrap:wrap;gap:8px}
+    .badge{background:#fff;border:1px solid #eee;border-radius:999px;padding:6px 10px;font-weight:700}
+    /* Cart Modal */
+    #cartModal{display:none;position:fixed;z-index:50;left:0;top:0;width:100%;height:100%;overflow:auto;background:rgba(0,0,0,.5)}
+    #cartContent{background:#fff;margin:50px auto;padding:20px;border-radius:14px;max-width:460px;position:relative}
+    #cartContent h2{margin:0 0 8px 0}
+    .close-cart{position:absolute;top:10px;right:12px;font-size:22px;cursor:pointer}
+    .cart-item{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px dashed #eee;padding:8px 0}
+    .cart-total{font-weight:800;margin-top:12px;text-align:right}
+    .checkout-btn{background:var(--brand);color:#fff;border:none;padding:12px 14px;border-radius:12px;cursor:pointer;width:100%;margin-top:12px;font-weight:800}
+    .cart-empty{color:var(--muted);text-align:center;margin:12px 0}
+    .small{font-size:12px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Brown Delivery</h1>
+    <p id="tagline">Baga nagaan dhuftan – nyaata feetan saffisaan!</p>
+    <div class="lang-switch" role="group" aria-label="Language switcher">
+      <button id="btn-om" class="active" onclick="setLang('om')">Afaan Oromoo</button>
+      <button id="btn-am" onclick="setLang('am')">Amharic</button>
+    </div>
+  </header>
+
+  <nav>
+    <div class="navwrap">
+      <a href="#home" id="nav-home">Home</a>
+      <a href="#about" id="nav-about">About</a>
+      <a href="#menu" id="nav-menu">Menu</a>
+      <a href="#payment" id="nav-payment">Payment</a>
+      <a href="#contact" id="nav-contact">Contact</a>
+      <button class="cart-chip" onclick="openCart()">🛒 <span id="cartLabel">Cart</span> (<span id="cartCount">0</span>)</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section id="home">
+      <div class="card">
+        <h2 class="title" id="home-title">Baga nagaan dhuftan Brown Delivery</h2>
+        <p class="muted" id="home-desc">Nyaata gaarii, tajaajila saffisaa, gatii madaalawaan — iddoo ati jirtutti si qunnama.</p>
+        <div class="badges" aria-hidden="true">
+          <span class="badge">🚚 Fast delivery</span>
+          <span class="badge">🍽️ Fresh</span>
+          <span class="badge">💳 Easy pay</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="card">
+        <h2 class="title" id="about-title">Nu Ilaali</h2>
+        <p id="about-desc">Brown Delivery yeroo gabaabaa keessatti nyaata qulqullina qabu gara mana keessanitti ni geessa. Fuuldurattis Afaan Oromoo fi Amharic tajaajila guutuu ni kennina.</p>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="card menu-section">
+        <div class="toolbar">
+          <h2 class="title" id="menu-title" style="margin-right:auto">Mennu Nyaataa</h2>
+          <input id="search" type="search" placeholder="Search / Barbaadi…" oninput="filterMenu(this.value)">
+        </div>
+        <h3 id="cat-fast">🍔 Fast Food</h3>
+        <div class="grid cols-2" id="fast-list"></div>
+        <h3 style="margin-top:16px" id="cat-trad">🍲 Traditional Food</h3>
+        <div class="grid cols-2" id="trad-list"></div>
+      </div>
+    </section>
+
+    <section id="payment">
+      <div class="card">
+        <h2 class="title" id="payment-title">Kaffaltii</h2>
+        <div class="grid cols-3">
+          <div class="item"><div class="left">🏦 <strong>CBE</strong></div><span class="muted" id="p-cbe">Bank transfer</span></div>
+          <div class="item"><div class="left">📱 <strong>Telebirr</strong></div><button class="btn" onclick="startGateway('Telebirr')" id="pay-cta-tele">Order via Telebirr</button></div>
+          <div class="item"><div class="left">📱 <strong>Ebirr</strong></div><button class="btn" onclick="startGateway('Ebirr')" id="pay-cta-ebirr">Order via Ebirr</button></div>
+          <div class="item"><div class="left">📱 <strong>M‑Pesa</strong></div><button class="btn" onclick="startGateway('M‑Pesa')" id="pay-cta-mpesa">Order via M‑Pesa</button></div>
+          <div class="item"><div class="left">🏦 <strong>CBO</strong></div><span class="muted" id="p-cbo">Bank transfer</span></div>
+        </div>
+        <p class="muted" id="pay-note" style="margin-top:10px">Barreeffama: kaffaltii irratti ragaa ergaa irratti maqaa fi lakkoofsa ajajaa galchi.</p>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="card">
+        <h2 class="title" id="contact-title">Nu Quunnamaa</h2>
+        <p id="contact-desc">Bilbila: <a href="tel:+251939734465">+251 93 973 4465</a> • WhatsApp/Telegram: <a href="https://wa.me/251939734465" target="_blank" rel="noopener">Chat</a></p>
+        <p id="hours">Sa’aatii tajaajilaa: Mon–Sun, 8:00 – 22:00</p>
+        <p class="muted" id="address">Iddoo: Asella (Service area: Addis Ababa & Asella)</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> Brown Delivery — All rights reserved.
+  </footer>
+
+  <!-- Cart Modal -->
+  <div id="cartModal" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+    <div id="cartContent" class="card">
+      <span class="close-cart" onclick="closeCart()" aria-label="Close">×</span>
+      <h2 id="cartTitle">Shopping Cart</h2>
+      <div id="cartItems"></div>
+      <div class="cart-total">Total: <span id="cartTotal">0</span> ETB</div>
+      <label class="small" for="payMethod">Preferred payment</label>
+      <select id="payMethod" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin:8px 0">
+        <option>Telebirr</option>
+        <option>Ebirr</option>
+        <option>M‑Pesa</option>
+        <option>CBE</option>
+        <option>CBO</option>
+      </select>
+      <button class="checkout-btn" onclick="checkoutCart()" id="checkoutBtn">Checkout via WhatsApp</button>
+      <button class="btn ghost" style="width:100%;margin-top:8px" onclick="clearCart()">Clear Cart</button>
+    </div>
+  </div>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Local state
+    let cart = JSON.parse(localStorage.getItem('bd_cart')||'[]');
+    let currentLang = localStorage.getItem('bd_lang') || 'om';
+
+    // i18n text
+    const i18n = {
+      om:{
+        tagline:'Baga nagaan dhuftan – nyaata feetan saffisaan!',
+        nav:{home:'Home',about:'About',menu:'Menu',payment:'Payment',contact:'Contact'},
+        homeTitle:'Baga nagaan dhuftan Brown Delivery',
+        homeDesc:'Nyaata gaarii, tajaajila saffisaa, gatii madaalawaan — iddoo ati jirtutti si qunnama.',
+        aboutTitle:'Nu Ilaali',
+        aboutDesc:'Brown Delivery yeroo gabaabaa keessatti nyaata qulqullina qabu gara mana keessanitti ni geessa. Fuuldurattis Afaan Oromoo fi Amharic tajaajila guutuu ni kennina.',
+        menuTitle:'Mennu Nyaataa',
+        catFast:'🍔 Fast Food',
+        catTrad:'🍲 Traditional Food',
+        paymentTitle:'Kaffaltii',
+        pCbe:'Bank transfer', pCbo:'Bank transfer',
+        payNote:'Barreeffama: kaffaltii irratti ragaa ergaa irratti maqaa fi lakkoofsa ajajaa galchi.',
+        contactTitle:'Nu Quunnamaa', contactDesc:'Bilbila:',
+        hours:'Sa’aatii tajaajilaa: Mon–Sun, 8:00 – 22:00',
+        address:'Iddoo: Addis Ababa (Service area: Addis Ababa & Asella)',
+        payCtas:{tele:'Order via Telebirr', ebirr:'Order via Ebirr', mpesa:'Order via M‑Pesa'},
+        cart:'Cart', add:'Add to Cart', order:'Order', qty:'Qty', total:'Total',
+        search:'Search / Barbaadi…', checkout:'Checkout via WhatsApp', clear:'Clear Cart', prefPay:'Preferred payment'
+      },
+      am:{
+        tagline:'እንኳን ወደ Brown Delivery በደህና መጡ – ፈጣን አገልግሎት፣ ጥራትና ዋጋ ሚዛናዊ!',
+        nav:{home:'መነሻ',about:'ስለ እኛ',menu:'ሜኑ',payment:'ክፍያ',contact:'አግኙን'},
+        homeTitle:'እንኳን ወደ Brown Delivery በደህና መጡ',
+        homeDesc:'ጥራት ያለው ምግብ፣ ፈጣን አገልግሎት እና ሚዛናዊ ዋጋ — ወደ ቤትዎ እናመጣለን።',
+        aboutTitle:'ስለ እኛ',
+        aboutDesc:'Brown Delivery ምግብን በፍጥነት እና በጥራት ወደ እርስዎ ያቀርባል። በአፋን ኦሮሞ እና አማርኛ ሙሉ አገልግሎት እናቀርባለን።',
+        menuTitle:'የምግብ ሜኑ',
+        catFast:'🍔 ፈጣን ምግብ',
+        catTrad:'🍲 ባህላዊ ምግብ',
+        paymentTitle:'ክፍያ',
+        pCbe:'የባንክ ማስተላለፊያ', pCbo:'የባንክ ማስተላለፊያ',
+        payNote:'ማስታወሻ፡ በክፍያ ሲፈፀም በመልዕክቱ ላይ ስም እና የትዕዛዝ ቁጥር ያስገቡ።',
+        contactTitle:'ያነጋግሩን', contactDesc:'ስልክ፡',
+        hours:'የክፍት ሰዓት፡ ሰኞ–እሁድ፣ 2:00 – 16:00 (LT)',
+        address:'አድራሻ፡ አዲስ አበባ (አገልግሎት: አዲስ አበባ & አሰላ)',
+        payCtas:{tele:'በ Telebirr ይዘዙ', ebirr:'በ Ebirr ይዘዙ', mpesa:'በ M‑Pesa ይዘዙ'},
+        cart:'ጋሪ', add:'አክል', order:'ትዕዛዝ', qty:'ብዛት', total:'ጠቅላላ',
+        search:'ፈልግ…', checkout:'በዋትሳፕ ይመራ', clear:'ጋሪ አፅዳ', prefPay:'ከፍያ መንገድ'
+      }
+    };
+
+    // Menu data
+    const menuData = {
+      om: {fast:[
+        {emoji:'🍔',name:'Burger',price:150},
+        {emoji:'🍕',name:'Pizza',price:250},
+        {emoji:'🥙',name:'Shawarma',price:180},
+        {emoji:'🌭',name:'Hotdog',price:120},
+        {emoji:'🥪',name:'Sandwich',price:130},
+        {emoji:'🍟',name:'Fries',price:90}
+      ], trad:[
+        {emoji:'🍲',name:'Shiro',price:140},
+        {emoji:'🥩',name:'Tibs',price:260},
+        {emoji:'🍛',name:'Injera Firfir',price:160},
+        {emoji:'🥗',name:'Dulet',price:230},
+        {emoji:'🧈',name:'Kitfo',price:320},
+        {emoji:'🍗',name:'Doro Wot',price:280}
+      ]},
+      am: {fast:[
+        {emoji:'🍔',name:'በርገር',price:150},
+        {emoji:'🍕',name:'ፒዛ',price:250},
+        {emoji:'🥙',name:'ሻዋርማ',price:180},
+        {emoji:'🌭',name:'ሆትዶግ',price:120},
+        {emoji:'🥪',name:'ሳንድዊች',price:130},
+        {emoji:'🍟',name:'ፍራይስ',price:90}
+      ], trad:[
+        {emoji:'🍲',name:'ሺሮ',price:140},
+        {emoji:'🥩',name:'ቲብስ',price:260},
+        {emoji:'🍛',name:'እንጀራ ፍርፍር',price:160},
+        {emoji:'🥗',name:'ዱለት',price:230},
+        {emoji:'🧈',name:'ክትፎ',price:320},
+        {emoji:'🍗',name:'ዶሮ ወጥ',price:280}
+      ]}
+    };
+
+    // Renderers
+    function renderMenu(lang){
+      const fastList = document.getElementById('fast-list');
+      const tradList = document.getElementById('trad-list');
+      fastList.innerHTML=''; tradList.innerHTML='';
+      for(const it of menuData[lang].fast){fastList.appendChild(menuItem(it))}
+      for(const it of menuData[lang].trad){tradList.appendChild(menuItem(it))}
+    }
+
+    function menuItem({emoji,name,price}){
+      const wrap=document.createElement('div');
+      wrap.className='item';
+      wrap.innerHTML=`<div class="left"><span class="emoji">${emoji}</span>
+        <div><div><strong>${name}</strong></div><div class="muted"><span class="price">${price}</span> ETB</div></div></div>
+        <div class="qty">
+          <button class="btn ghost" aria-label="decrease" onclick="changeQty('${name}',-1)">−</button>
+          <span id="q-${cssId(name)}">0</span>
+          <button class="btn ghost" aria-label="increase" onclick="changeQty('${name}',1)">＋</button>
+          <button class="btn" onclick="addToCart('${name}',${price})" id="add-${cssId(name)}">${i18n[currentLang].add}</button>
+        </div>`;
+      return wrap;
+    }
+
+    function cssId(s){return s.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9_-]/g,'')}
+
+    function changeQty(name,delta){
+      const id = `q-${cssId(name)}`;
+      const el = document.getElementById(id);
+      const val = Math.max(0, (parseInt(el.textContent)||0) + delta);
+      el.textContent = val;
+    }
+
+    function addToCart(name, price){
+      const q = parseInt(document.getElementById(`q-${cssId(name)}`).textContent)||1;
+      if(q<=0) return;
+      const existing = cart.find(i=>i.name===name);
+      if(existing){ existing.qty += q; }
+      else{ cart.push({name, price, qty:q}); }
+      persistCart();
+      toast(`${name} ×${q} added`);
+      updateCartBadge();
+    }
+
+    function persistCart(){ localStorage.setItem('bd_cart', JSON.stringify(cart)); }
+
+    function updateCartBadge(){
+      const count = cart.reduce((s,i)=>s+i.qty,0);
+      document.getElementById('cartCount').textContent = count;
+    }
+
+    function openCart(){
+      renderCart();
+      document.getElementById('cartModal').style.display='block';
+    }
+    function closeCart(){ document.getElementById('cartModal').style.display='none'; }
+
+    function renderCart(){
+      const box = document.getElementById('cartItems');
+      box.innerHTML='';
+      if(cart.length===0){ box.innerHTML = `<p class="cart-empty">${currentLang==='am'?'ጋሪዎ ባዶ ነው':'Cart is empty'}</p>`; }
+      else{
+        cart.forEach((it,idx)=>{
+          const row = document.createElement('div');
+          row.className='cart-item';
+          row.innerHTML = `<div><strong>${it.name}</strong><div class="small">${it.price} ETB × ${it.qty}</div></div>
+            <div class="qty">
+              <button class="btn ghost" onclick="cartQty(${idx},-1)">−</button>
+              <span>${it.qty}</span>
+              <button class="btn ghost" onclick="cartQty(${idx},1)">＋</button>
+              <button class="btn" onclick="removeItem(${idx})">✕</button>
+            </div>`;
+          box.appendChild(row);
+        });
+      }
+      document.getElementById('cartTotal').textContent = String(total());
+      // Localize modal controls
+      document.getElementById('checkoutBtn').textContent = i18n[currentLang].checkout;
+      document.getElementById('cartTitle').textContent = currentLang==='am'?'ጋሪ':'Shopping Cart';
+      document.getElementById('cartLabel').textContent = i18n[currentLang].cart;
+    }
+
+    function cartQty(idx,delta){
+      cart[idx].qty += delta;
+      if(cart[idx].qty<=0) cart.splice(idx,1);
+      persistCart();
+      renderCart();
+      updateCartBadge();
+    }
+    function removeItem(idx){ cart.splice(idx,1); persistCart(); renderCart(); updateCartBadge(); }
+    function clearCart(){ cart=[]; persistCart(); renderCart(); updateCartBadge(); }
+    function total(){ return cart.reduce((s,i)=>s + i.price*i.qty, 0); }
+
+    function checkoutCart(){
+      if(cart.length===0){ toast(currentLang==='am'? 'ምንም ምርት አልተመረጠም':'No items in cart'); return; }
+      const pay = document.getElementById('payMethod').value;
+      const lines = cart.map(i=>`• ${i.name} × ${i.qty} = ${i.price*i.qty} ETB`).join('%0A');
+      const msg = encodeURIComponent(
+        `Hello Brown Delivery!%0AOrder:%0A${lines}%0A`+
+        `Total: ${total()} ETB%0APayment: ${pay}`
+      );
+      window.open(`https://wa.me/251705734465?text=${msg}`, '_blank');
+    }
+
+    function startGateway(name){
+      // Prefill message with chosen gateway without items
+      const msg = encodeURIComponent(`Hello Brown Delivery! I want to order and pay via ${name}.`);
+      window.open(`https://wa.me/251705784465?text=${msg}`, '_blank');
+    }
+
+    function applyText(lang){
+      const t=i18n[lang];
+      document.getElementById('tagline').textContent=t.tagline;
+      document.getElementById('nav-home').textContent=t.nav.home;
+      document.getElementById('nav-about').textContent=t.nav.about;
+      document.getElementById('nav-menu').textContent=t.nav.menu;
+      document.getElementById('nav-payment').textContent=t.nav.payment;
+      document.getElementById('nav-contact').textContent=t.nav.contact;
+      document.getElementById('home-title').textContent=t.homeTitle;
+      document.getElementById('home-desc').textContent=t.homeDesc;
+      document.getElementById('about-title').textContent=t.aboutTitle;
+      document.getElementById('about-desc').textContent=t.aboutDesc;
+      document.getElementById('menu-title').textContent=t.menuTitle;
+      document.getElementById('cat-fast').textContent=t.catFast;
+      document.getElementById('cat-trad').textContent=t.catTrad;
+      document.getElementById('payment-title').textContent=t.paymentTitle;
+      document.getElementById('p-cbe').textContent=t.pCbe;
+      document.getElementById('p-cbo').textContent=t.pCbo;
+      document.getElementById('pay-note').textContent=t.payNote;
+      document.getElementById('pay-cta-tele').textContent=t.payCtas.tele;
+      document.getElementById('pay-cta-ebirr').textContent=t.payCtas.ebirr;
+      document.getElementById('pay-cta-mpesa').textContent=t.payCtas.mpesa;
+      document.getElementById('contact-title').textContent=t.contactTitle;
+      const phoneLinks = '<a href="tel:+251939734465">+251 93 973 4465</a> • WhatsApp/Telegram: <a href="https://wa.me/251705784465" target="_blank" rel="noopener">Chat</a>';
+      document.getElementById('contact-desc').innerHTML = (t.contactDesc + ' ' + phoneLinks);
+      document.getElementById('hours').textContent=t.hours;
+      document.getElementById('address').textContent=t.address;
+      // Controls
+      document.getElementById('search').placeholder = t.search;
+      // Toggle active
+      document.getElementById('btn-om').classList.toggle('active', lang==='om');
+      document.getElementById('btn-am').classList.toggle('active', lang==='am');
+      // Update add buttons text
+      document.querySelectorAll('[id^="add-"]').forEach(b=> b.textContent = t.add);
+      document.getElementById('checkoutBtn').textContent = t.checkout;
+      document.getElementById('cartLabel').textContent = t.cart;
+      currentLang = lang; localStorage.setItem('bd_lang', lang);
+    }
+
+    function setLang(lang){ applyText(lang); renderMenu(lang); }
+
+    function filterMenu(q){
+      q = (q||'').toLowerCase();
+      document.querySelectorAll('#menu .item').forEach(card=>{
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+
+    function toast(msg){
+      const t = document.createElement('div');
+      t.textContent = msg; t.style.cssText = 'position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:10px 14px;border-radius:999px;opacity:.95;z-index:60;';
+      document.body.appendChild(t); setTimeout(()=>{t.remove()}, 1500);
+    }
+
+    // Initial
+    setLang(currentLang);
+    updateCartBadge();
+  </script>
+
+  <!-- JSON-LD Schema for LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FoodEstablishment",
+    "name": "Brown Delivery",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Asella",
+      "addressCountry": "ET"
+    },
+    "telephone": "+251939734465","0708080889"
+    "areaServed": ["Asella", "Asella"],
+    "servesCuisine": ["Ethiopian", "Fast Food"],
+    "openingHours": "Mo-Su 08:00-22:00",
+    "url": "https://example.com"
+  }
+  </script>
+</body>
+</html>
